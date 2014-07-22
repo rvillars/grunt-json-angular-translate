@@ -50,5 +50,11 @@ exports.jsonAngularTranslate = {
     var expected = grunt.file.read('test/expected/messages_ru.legacy.js');
     test.equal(actual, expected, 'should be able to override language matching with my own function');
     test.done();
+  },
+  concat_script: function (test) {
+    var actual = grunt.file.read('tmp/test5/translations.js');
+    var expected = grunt.file.read('test/expected/translations.js');
+    test.equal(actual, expected, 'should be able concat multiple translation file into one module script');
+    test.done();
   }
 };

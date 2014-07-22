@@ -50,6 +50,55 @@ module.exports = function (grunt) {
         return filepath.match(options.extractLanguage)[0];
       };
     }
+    
+    if (options.concatScriptName) {
+      
+      var translationMap = {};
+      this.files.forEach(function (file) {
+        var language;
+        var translation = file.src.filter(function (filepath) {
+          // Warn on and remove invalid source files (if nonull was set).
+          if (!grunt.file.exists(filepath)) {
+            grunt.log.warn('Source file "' + filepath + '" not found.');
+            return false;
+          } else {
+            return true;
+          }
+        }).map(function (filepath) {
+          // Read file source.
+          var currLanguage = extractLanguage(filepath);
+          if (language && language !== currLanguage) {
+            throw 'inconsistent language: ' + filepath + ' (' + currLanguage + ' !== ' + language + ')';
+          }
+          language = currLanguage;
+          return unflatten(JSON.parse(grunt.file.read(filepath)));
+        }).reduce(extend, {});
+        translation = toSingleQuotes(JSON.stringify(translation));
+        translationMap[language] = translation;
+      });
+      var src = grunt.template.process(multiline(function(){/*
+      
+'use strict';
+
+try {
+  angular.module('<%= moduleName %>');
+} catch (e) {
+  angular.module('<%= moduleName %>', ['pascalprecht.translate']);
+}
+
+angular.module('<%= moduleName %>').config(function ($translateProvider) {
+<%Object.keys(translations).forEach(function (key) { %>$translateProvider.translations('<%= key %>',<%= translations[key] %>);<% }) %>
+$translateProvider.preferredLanguage('<%= preferredLanguage %>');
+});
+
+      */}), {data: {moduleName: options.moduleName, preferredLanguage: options.preferredLanguage, translations: translationMap}});
+      var file = {};
+      file.dest = 'tmp/test5/translations.js';
+      src = jb(src, {'indent_size': 2, 'jslint_happy': true}) + '\n';
+      grunt.file.write(file.dest, src);
+      grunt.log.writeln('File "' + file.dest + '" created.');
+      
+    } else {
 
     this.files.forEach(function (file) {
       // Concat specified files.
@@ -99,12 +148,15 @@ angular.module('<%= moduleName %>').config(function ($translateProvider) {
 });
       */}), {data: {language: language, moduleName: options.moduleName, translations: toSingleQuotes(JSON.stringify(src))}});
 
+      
       src = jb(src, {'indent_size': 2, 'jslint_happy': true}) + '\n';
 
       grunt.file.write(file.dest, src);
 
       grunt.log.writeln('File "' + file.dest + '" created.');
     });
+    
+    }
   });
 
 };

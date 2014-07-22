@@ -8,18 +8,14 @@
 
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
   // load all npm grunt tasks
   require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
     jshint: {
-      all: [
-        'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>'
-      ],
+      all: ['Gruntfile.js', 'tasks/*.js', '<%= nodeunit.tests %>'],
       options: {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
@@ -61,7 +57,7 @@ module.exports = function (grunt) {
       function_language: {
         options: {
           moduleName: 'wixTranslations',
-          extractLanguage: function (filepath) {
+          extractLanguage: function(filepath) {
             return filepath.slice(-2);
           }
         },
@@ -83,6 +79,20 @@ module.exports = function (grunt) {
           cwd: 'test/fixtures',
           src: '*.json',
           dest: 'tmp/test4',
+          ext: '.js'
+        }]
+      },
+      concat_script: {
+        options: {
+          moduleName: 'wixTranslations',
+          preferredLanguage: 'ru',
+          concatScriptName: 'translations'
+        },
+        files: [{
+          expand: true,
+          cwd: 'test/fixtures',
+          src: '*.json',
+          dest: 'tmp/test5',
           ext: '.js'
         }]
       }

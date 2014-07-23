@@ -86,14 +86,12 @@ module.exports = function(grunt) {
         options: {
           moduleName: 'wixTranslations',
           preferredLanguage: 'ru',
-          concatScriptName: 'translations'
+          concatScript: 'tmp/test5/translations.js'
         },
         files: [{
           expand: true,
           cwd: 'test/fixtures',
-          src: '*.json',
-          dest: 'tmp/test5',
-          ext: '.js'
+          src: '*.json'
         }]
       }
     },

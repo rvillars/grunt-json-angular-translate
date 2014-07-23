@@ -51,7 +51,7 @@ module.exports = function (grunt) {
       };
     }
     
-    if (options.concatScriptName) {
+    if (options.concatScript) {
       
       var translationMap = {};
       this.files.forEach(function (file) {
@@ -92,11 +92,9 @@ $translateProvider.preferredLanguage('<%= preferredLanguage %>');
 });
 
       */}), {data: {moduleName: options.moduleName, preferredLanguage: options.preferredLanguage, translations: translationMap}});
-      var file = {};
-      file.dest = 'tmp/test5/translations.js';
       src = jb(src, {'indent_size': 2, 'jslint_happy': true}) + '\n';
-      grunt.file.write(file.dest, src);
-      grunt.log.writeln('File "' + file.dest + '" created.');
+      grunt.file.write(options.concatScript, src);
+      grunt.log.writeln('File "' + options.concatScript + '" created.');
       
     } else {
 

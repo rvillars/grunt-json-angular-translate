@@ -86,10 +86,10 @@ try {
   angular.module('<%= moduleName %>', ['pascalprecht.translate']);
 }
 
-angular.module('<%= moduleName %>').config(function ($translateProvider) {
+angular.module('<%= moduleName %>').config(['$translateProvider', function ($translateProvider) {
 <%Object.keys(translations).forEach(function (key) { %>$translateProvider.translations('<%= key %>',<%= translations[key] %>);<% }) %>
 $translateProvider.preferredLanguage('<%= preferredLanguage %>');
-});
+}]);
 
       */}), {data: {moduleName: options.moduleName, preferredLanguage: options.preferredLanguage, translations: translationMap}});
       src = jb(src, {'indent_size': 2, 'jslint_happy': true}) + '\n';
@@ -128,10 +128,10 @@ try {
   angular.module('<%= moduleName %>', ['pascalprecht.translate']);
 }
 
-angular.module('<%= moduleName %>').config(function ($translateProvider) {
+angular.module('<%= moduleName %>').config(['$translateProvider', function ($translateProvider) {
   $translateProvider.translations('<%= language %>', <%= translations %>);
   $translateProvider.preferredLanguage('<%= language %>');
-});
+}]);
       */} : function(){/*
 'use strict';
 
@@ -141,9 +141,9 @@ try {
   angular.module('<%= moduleName %>', ['pascalprecht.translate']);
 }
 
-angular.module('<%= moduleName %>').config(function ($translateProvider) {
+angular.module('<%= moduleName %>').config(['$translateProvider', function ($translateProvider) {
   $translateProvider.translations(<%= translations %>);
-});
+}]);
       */}), {data: {language: language, moduleName: options.moduleName, translations: toSingleQuotes(JSON.stringify(src))}});
 
       
